@@ -1,0 +1,23 @@
+# Creates a configmap resource to mount to the NGINX pod
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "chart.fullname" . }}-nginx-conf
+data:
+  nginx.conf: |
+    user nginx;
+    worker_processes  1;
+    events {
+        worker_connections  10240;
+    }
+    http {
+      server {
+        listen 80;
+
+        location / {
+            root /usr/share/nginx/html;
+            index index.html index.htm;
+            try_files $uri $uri/ /index.html =404;
+        }
+      }
+    }
